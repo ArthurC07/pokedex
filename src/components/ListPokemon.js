@@ -6,44 +6,41 @@ class ListPokemons extends Component {
     constructor(){
         super()
         this.state = {
-            isList:true,
+            isList: true,
             details: {
-                "capture_rate": "",
-                "habitat": {
-                    "name": ""
+                capture_rate: "",
+                habitat: {
+                    name: ""
                 },
-                "color": {
-                    "name": ""
+                color: {
+                    name: ""
                 },
             }
         }
     }
 
-    handleClick(url) {
-        // e.preventDefault();
-        this.setState({
-            isList: false,
-        })
+    handleClick = (url) => {
+        this.setState({isList: false})
         axios.get(url)
         .then(response => {
-            this.setState({details: response.data.pokemon_species})
+            this.setState({details: response.data})
         })
+    }
 
-        console.log('The link was clicked.');
+    reset = () => {
+        this.setState({isList: true})
     }
 
     render(){
         const list = this.props.list;
         const listPokemons = list.map((element) =>
         <li key={element.name}>
-            <a href="#" onClick={this.handleClick(element.url)}>{element.name}</a>
+            <a href="#" onClick={() => this.handleClick(element.url)}>{element.name}</a>
         </li>
         );
 
         if(this.state.isList){
-            return (
-                <ul>{listPokemons}</ul>
-            );
+            return <ul>{listPokemons}</ul>;
         }
         return <About details={this.state.details}/>;
     }
@@ -54,6 +51,7 @@ export const About = (props)=> {
             <p><b>Capture Rate:</b> {props.details.capture_rate}</p>
             <p><b>Habitat:</b>{props.details.habitat.name}</p>
             <p><b>Color:</b>{props.details.color.name}</p>
+            <a href="/" onClick={() => this.reset()}>Back</a>
         </div>
     );
 }
