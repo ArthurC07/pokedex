@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as urlActions from '../actions';
+import { withRouter } from 'react-router-dom'
+import {bindActionCreators} from 'redux';
 
 class ListPokemons extends Component {
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state = {
             isList: true,
+            isLoading: false,
             details: {
                 capture_rate: "",
                 habitat: {
@@ -20,15 +23,8 @@ class ListPokemons extends Component {
     }
 
     handleClick = (url) => {
-        this.setState({isList: false})
-        axios.get(url)
-        .then(response => {
-            this.setState({details: response.data})
-        })
-    }
-
-    reset = () => {
-        this.setState({isList: true})
+        this.props.actions.changeUrl(url);
+        this.props.history.push("details");
     }
 
     render(){
@@ -39,22 +35,25 @@ class ListPokemons extends Component {
         </li>
         );
 
-        if(this.state.isList){
-            return <ul>{listPokemons}</ul>;
-        }
-        return <About details={this.state.details}/>;
+        return <ul>{listPokemons}</ul>;
     }
 }
-export const About = (props)=> {
-    return (
-        <div>
-            <p><b>Capture Rate:</b> {props.details.capture_rate}</p>
-            <p><b>Habitat:</b>{props.details.habitat.name}</p>
-            <p><b>Color:</b>{props.details.color.name}</p>
-            <a href="/" onClick={() => this.reset()}>Back</a>
-        </div>
-    );
+// export const About = (props)=> {
+//     return
+// }
+
+const mapStateToProps = state => ({
+    url: state.pokemons.url
+})
+
+
+const mapDispatchToProps = dispatch => {
+    return {actions: bindActionCreators(urlActions, dispatch)}
 }
 
+const ListPokemonComponent = connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ListPokemons);
 
-export default ListPokemons;
+export default withRouter(ListPokemonComponent);

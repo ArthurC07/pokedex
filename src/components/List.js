@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import ListPokemons from './ListPokemon';
+import { connect } from 'react-redux'
 
 class List extends Component {
     constructor(){
@@ -23,4 +24,4 @@ class List extends Component {
     }
 }
 
-export default List;
+export default connect()(List)
