@@ -25,7 +25,10 @@ class About extends Component {
        axios.get(this.props.url)
         .then(response => {
             this.setState({
-                details: response.data,
+                details: {
+                    ...response.data,
+                    habitat: response.data.habitat ? response.data.habitat : {name:' ----- '}
+                },
                 isLoading: false
             })
         })
