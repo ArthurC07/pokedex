@@ -22,7 +22,6 @@ class About extends Component {
         }
     }
     componentDidMount() {
-        console.log(this.props.url);
        axios.get(this.props.url)
         .then(response => {
             this.setState({
